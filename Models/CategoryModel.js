@@ -12,6 +12,6 @@ const categorySchema = new mongoose.Schema({
 });
 
 
-const Category = mongoose.model("categories", categorySchema); // the products here is the name for table at data base
+const Category = mongoose.model("categories", categorySchema); // the categories here is the name for table at database
 
 module.exports = Category;
