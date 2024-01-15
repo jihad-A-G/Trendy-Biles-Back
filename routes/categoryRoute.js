@@ -1,5 +1,6 @@
 import express from "express";
 import CategoryController from "../Controllers/CategoryController.js";
+
 const categoryRouter = express.Router();
 
 categoryRouter.post("/",CategoryController.createCategory);

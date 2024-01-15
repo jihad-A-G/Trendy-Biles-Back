@@ -11,13 +11,13 @@ const productSchema = new mongoose.Schema({
   },
   cost: { 
     type: Number ,
-    required: true
+    required: true  
   },
-  categories: { 
+  categories: [{ 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "categories",
     required: true
-  },
+  }],
   image: { 
     type: String,
     required: true
@@ -39,17 +39,21 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  colors: { 
-    type: Array ,
-    required: true
-  },
+  colors: [{ 
+    name: { 
+      type: String,
+      required: true 
+    },
+  }],
 
 });
 
-productSchema.pre("find", function (next) {
-  this.populate(["categories"]);
-  next();
-});
+productSchema.statics.getAllProducts = async () => {
+  return this.find().populate("categories");
+};
+productSchema.statics.getProductById = async (productId) => {
+  return this.findById(productId).populate("categories");
+};
 
 const Product = mongoose.model("products", productSchema);
 

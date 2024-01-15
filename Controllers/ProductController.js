@@ -3,8 +3,7 @@ import  Product  from "../Models/ProductModel.js";
 
 class ProductController {
     static createProduct = async (req, res) => {
-        const { productName, price, cost, categories, image, description, deal, dealPrice, quantity, colors} 
-        = req.body;
+        const { productName, price, cost, categories, image, description, deal, dealPrice, quantity, colors} = req.body;
         try {
             const product = await Product.create({
                 productName,
@@ -28,7 +27,7 @@ class ProductController {
     
     static readProduct = async (req, res) => {
         try {
-            const product = await Product.find();
+            const product = await Product.getAllProducts();
             res.status(200).json(product);
         } 
         catch (error) {
@@ -39,9 +38,7 @@ class ProductController {
     static readOneProduct = async (req, res) => {
         const { id } = req.params;
         try {
-            const product = await Product.findById(id)
-            .populate(["categories"])
-            .exec();
+            const product = await Product.getProductById(id)
             res.status(200).json(product);
         } 
         catch (error) {
@@ -51,8 +48,7 @@ class ProductController {
 
     static updateProduct = async (req, res) => {
         const { id } = req.params;
-        const { productName, price, cost, categories, description, deal, dealPrice, quantity, colors} 
-        = req.body;
+        const { productName, price, cost, categories, description, deal, dealPrice, quantity, colors} = req.body;
 
         try {
             const updateFields = {
@@ -79,12 +75,13 @@ class ProductController {
         const { id } = req.params;
         try {
             await Product.findByIdAndDelete(id);
-            res.status(200).json({ message: "offers deleted succefully" });
+            res.status(200).json({ message: "Product deleted succefully" });
         }
         catch (error) {
             res.status(400).json({ error: error.message });
         }
     };
 }
+
 module.exports = ProductController
 

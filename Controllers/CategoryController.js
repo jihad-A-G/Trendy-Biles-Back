@@ -3,8 +3,7 @@ import  Category  from "../Models/CategoryModel.js";
 
 class CategoryController {
     static createCategory = async (req, res) => {
-        const { name, confirm } 
-        = req.body;
+        const { name, confirm }  = req.body;
 
         try {
             const category = await Category.create({
@@ -20,7 +19,7 @@ class CategoryController {
     
     static readCategory = async (req, res) => {
         try {
-            const category = await Category.find();
+            const category = await Category.getAllCategories();
             res.status(200).json(category);
         } 
         catch (error) {
@@ -31,7 +30,7 @@ class CategoryController {
     static readOneCategory = async (req, res) => {
         const { id } = req.params;
         try {
-            const category = await Category.findById(id)
+            const category = await Category.getOneCategory(id)
             res.status(200).json(category);
         } 
         catch (error) {
@@ -41,8 +40,7 @@ class CategoryController {
 
     static updateCategory = async (req, res) => {
         const { id } = req.params;
-        const { name, confirm } 
-        = req.body;
+        const { name, confirm } = req.body;
 
         try {
             const updateFields = {
@@ -79,5 +77,6 @@ class CategoryController {
         }
     };
 }
+
 module.exports = CategoryController
 
