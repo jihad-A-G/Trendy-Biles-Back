@@ -1,13 +1,13 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
 const aboutusSchema = new mongoose.Schema({
   content: { 
     type: String,
-    required: true,
+    required: false,
   },
   logoImage:{
     type:String,
-    required:true
+    required:false
   },
   companyName:{
     type:String,
