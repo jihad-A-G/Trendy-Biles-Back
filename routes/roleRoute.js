@@ -8,4 +8,4 @@ roleRouter.get("/:id",RoleController.readOneRole);
 roleRouter.patch("/:id",RoleController.updateRole);
 roleRouter.delete("/:id",RoleController.deleteRole);
 
-export { roleRouter as RoleRoute };
+export default roleRouter;

@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 import connect from './config/db.js'
 import cors from 'cors'
 import AboutusRouter from './routes/aboutusRoute.js'
+import RoleRouter from './routes/roleRoute.js'
 dotenv.config()
 const app = express()
 //middlware to parse request body that doesn't contains files(multer will do parse the one contains files)
@@ -17,6 +18,8 @@ app.use(cors())
 
 //Routes goes here
 app.use('/api/aboutus',AboutusRouter)
+app.use('/api/roles',RoleRouter)
+
 
 
 //this middleware coonect to the mongodb atlas cluster, 'db_string' is the connection string
