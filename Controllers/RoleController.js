@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Role from "../Models/roleModel.js";
+import Role from "../Models/RoleModel.js";
 
 class RoleController {
   static createRole = async (req, res) => {
