@@ -1,7 +1,8 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import bodyParser from 'body-parser'
-import connect from './db.js'
+import connect from './config/db.js'
+import cors from 'cors'
 dotenv.config()
 const app = express()
 //middlware to parse request body that doesn't contains files(multer will do parse the one contains files)
