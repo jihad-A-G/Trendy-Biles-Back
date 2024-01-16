@@ -6,11 +6,11 @@ const userSchema = new mongoose.Schema({
     required: true
   },
   password: {
-    type: Number,
+    type: String,
     required: true
   },
   email: { 
-    type: Boolean ,
+    type: String ,
     required: true
   },
   phoneNumber : {
@@ -23,10 +23,6 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// productSchema.pre("find", function (next) {
-//   this.populate(["roles"]);
-//   next();
-// });
 
 const User = mongoose.model("users", userSchema);
 

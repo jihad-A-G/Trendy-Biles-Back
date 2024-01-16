@@ -6,7 +6,7 @@ const adminSchema = new mongoose.Schema({
     required: true
   },
   password: {
-    type: Number,
+    type: String,
     required: true
   },
   authorized: { 
@@ -16,15 +16,15 @@ const adminSchema = new mongoose.Schema({
   roles: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "roles",
-    required: true
+    required: false
   }
 });
 
-productSchema.pre("find", function (next) {
-  this.populate(["roles"]);
-  next();
-});
+// productSchema.pre("find", function (next) {
+//   this.populate(["roles"]);
+//   next();
+// });
 
-const Product = mongoose.model("admins", adminSchema);
+const Admin = mongoose.model("admins", adminSchema);
 
-module.exports = Product;
+export default Admin;
