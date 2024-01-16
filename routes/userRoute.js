@@ -8,4 +8,4 @@ userRouter.get("/:id",UserController.readOneUser);
 userRouter.patch("/:id",UserController.updateUser);
 userRouter.delete("/:id",UserController.deleteUser);
 
-module.exports = userRouter;
+export default userRouter;

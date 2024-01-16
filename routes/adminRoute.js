@@ -8,4 +8,4 @@ adminRouter.get("/:id",AdminController.readOneAdmin);
 adminRouter.patch("/:id",AdminController.updateAdmin);
 adminRouter.delete("/:id",AdminController.deleteAdmin);
 
-module.exports = adminRouter;
+export default adminRouter;

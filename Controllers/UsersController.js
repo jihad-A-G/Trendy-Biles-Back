@@ -1,51 +1,87 @@
-import mongooose from "mongoose";
+import mongoose from "mongoose";
 import User from "../Models/UsersModel.js";
+import bcrypt from 'bcrypt';
 
-class UserController {
+export default class UserController {
   static createUser = async (req, res) => {
     const { username, password, email, phoneNumber, address } = req.body;
-
+  
     try {
-      const User = await User.create({
+      // Check if the username or email already exists
+      const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+  
+      if (existingUser) {
+        // If username or email already exists, return an error response
+        return res.status(400).json({ error: 'Username or email already exists' });
+      }
+
+      const hashedPassword = await bcrypt.hash(password , 10);
+  
+      // If username and email are unique, create the new user
+      const user = await User.create({
         username,
-        password,
+        password:hashedPassword,
         email,
         phoneNumber,
-        address
+        address,
       });
-      res.status(200).json(User);
+  
+      res.status(200).json(user);
     } catch (error) {
-      res.status(400).json({ ...error });
+      // Handle other errors
+      res.status(500).json({ error: 'Internal Server Error' });
     }
   };
-
   static readUser = async (req, res) => {
     try {
-      const User = await User.find();
-      res.status(200).json(User);
+      const user = await User.find();
+      res.status(200).json(user);
     } catch (error) {
       res.status(400).json({ error: { ...error } });
     }
   };
 
   static readOneUser = async (req, res) => {
-    const { id } = req.params;
-    try {
-      const User = await User.findById(id);
-      res.status(200).json(User);
-    } catch (error) {
-      res.status(400).json({ error: { ...error } });
+  
+      const { id } = req.params;
+    
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json( 
+          { data: null,
+            message:'not found',
+            status : 404
+          }
+        );
+      }
+      const user = await User.findById(id)
+      if (!user) {
+        return res.status(404).json(
+          { data: null,
+            message:'not found',
+            status : 404
+          }
+        );
+      }
+    
+      res.status(200).json(
+        { data: user,
+          message:'succes',
+          status : 200
+        }
+      );
     }
-  };
 
   static updateUser = async (req, res) => {
     const { id } = req.params;
     const {  username, password, email, phoneNumber, address  } = req.body;
 
+    const hashedPassword = await bcrypt.hash(password , 10);
+
+
     try {
       const updateFields = {
         username,
-        password,
+        password:hashedPassword,
         email,
         phoneNumber,
         address
@@ -58,11 +94,11 @@ class UserController {
         }`;
       }
 
-      const User = await User.findByIdAndUpdate(id, updateFields, {
+      const user = await User.findByIdAndUpdate(id, updateFields, {
         new: true,
       });
 
-      res.status(200).json(User);
+      res.status(200).json(user);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
@@ -78,4 +114,3 @@ class UserController {
     }
   };
 }
-module.exports = UserController;
