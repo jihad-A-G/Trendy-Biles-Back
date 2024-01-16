@@ -25,6 +25,6 @@ productSchema.pre("find", function (next) {
   next();
 });
 
-const Product = mongoose.model("admins", adminSchema);
+const Admin = mongoose.model("admins", adminSchema);
 
-module.exports = Product;
+module.exports = Admin;
