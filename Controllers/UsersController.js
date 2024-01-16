@@ -1,7 +1,7 @@
 import mongooose from "mongoose";
 import User from "../Models/UsersModel.js";
 
-class UserController {
+export default class UserController {
   static createUser = async (req, res) => {
     const { username, password, email, phoneNumber, address } = req.body;
 
@@ -78,4 +78,3 @@ class UserController {
     }
   };
 }
-module.exports = UserController;
