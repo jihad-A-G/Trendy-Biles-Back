@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import User from "../Models/UsersModel.js";
+import bcrypt from 'bcrypt';
 
 export default class UserController {
   static createUser = async (req, res) => {
@@ -13,11 +14,13 @@ export default class UserController {
         // If username or email already exists, return an error response
         return res.status(400).json({ error: 'Username or email already exists' });
       }
+
+      const hashedPassword = await bcrypt.hash(password , 10);
   
       // If username and email are unique, create the new user
       const user = await User.create({
         username,
-        password,
+        password:hashedPassword,
         email,
         phoneNumber,
         address,
@@ -72,10 +75,13 @@ export default class UserController {
     const { id } = req.params;
     const {  username, password, email, phoneNumber, address  } = req.body;
 
+    const hashedPassword = await bcrypt.hash(password , 10);
+
+
     try {
       const updateFields = {
         username,
-        password,
+        password:hashedPassword,
         email,
         phoneNumber,
         address

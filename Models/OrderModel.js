@@ -1,35 +1,53 @@
 import mongoose from "mongoose";
+import mongooseSequence from "mongoose-sequence";
+
+const validStatusValues = ["pending", "on delivery", "received"];
 
 const orderSchema = new mongoose.Schema({
-  orderNumber: { 
+  orderNumber: {
     type: Number,
+    sequence: { type: String, inc_field: "orderNumber" },
+    required: false
   },
-  userId:{
-    type: Number,
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
     required: true,
   },
-  products:[
+  products: [
     {
-        quantity: {
-            type: Number
-        }
+      quantity: {
+        type: Number
+      },
+      product: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "products",
+      },
     }
   ],
   totalPrice: {
     type: Number,
     required: true
   },
-  date:{
+  date: {
     type: Date,
-    required: true
+    required: false
   },
   status: {
     type: String,
-    required: true
+    required: false,
+    enum: validStatusValues,
+    default: "pending"
   }
 });
 
+orderSchema.plugin(mongooseSequence(mongoose), { inc_field: "orderNumber" });
 
-const Order = mongoose.model("orders", orderSchema); // the Orders here is the name for table at data base
+orderSchema.pre("find", function (next) {
+  this.populate("userId").populate("products.product");
+  next();
+});
 
-export default Order
+const Order = mongoose.model("orders", orderSchema);
+
+export default Order;

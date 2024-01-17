@@ -1,29 +1,30 @@
 import mongoose from "mongoose";
 
 const adminSchema = new mongoose.Schema({
-  username: { 
+  username: {
     type: String,
-    required: true
+    required: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
-  authorized: { 
-    type: Boolean ,
-    required: true
+  authorized: {
+    type: Boolean,
+    default: false,
+    required: false,
   },
-  roles: { 
-    type: mongoose.Schema.Types.ObjectId, 
+  roles: {
+    type: mongoose.Schema.Types.ObjectId,
     ref: "roles",
-    required: false
-  }
+    required: true,
+  },
 });
 
-// productSchema.pre("find", function (next) {
-//   this.populate(["roles"]);
-//   next();
-// });
+adminSchema.pre("find", function (next) {
+  this.populate("roles");
+  next();
+});
 
 const Admin = mongoose.model("admins", adminSchema);
 

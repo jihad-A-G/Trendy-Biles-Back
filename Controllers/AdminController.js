@@ -1,9 +1,10 @@
 import mongoose  from "mongoose";
 import  Admin  from "../Models/AdminsModel.js";
+import bcrypt from 'bcrypt';
 
 class AdminController {
     static createAdmin = async (req, res) => {
-        const { username, password, authorized } = req.body;
+        const { username, password, authorized ,roles} = req.body;
       
         try {
           // Check if the username already exists
@@ -13,25 +14,28 @@ class AdminController {
             // If the username already exists, return an error response
             return res.status(400).json({ error: 'Username already exists' });
           }
+
+          const hashedPassword = await bcrypt.hash(password,10);
       
           // If the username is unique, create the new admin
           const admin = await Admin.create({
             username,
-            password,
-            authorized
+            password:hashedPassword,
+            authorized,
+            roles
           });
       
           res.status(200).json(admin);
         } catch (error) {
           // Handle other errors
-          res.status(500).json({ error: 'Internal Server Error' });
+          res.status(500).json({ error: 'Internal Server Error', err:error.message });
         }
       };
       
     
     static readAdmin = async (req, res) => {
         try {
-            const admin = await Admin.find();
+            const admin = await Admin.find().populate('roles');
             res.status(200).json(admin);
         } 
         catch (error) {
@@ -48,7 +52,7 @@ class AdminController {
             return res.status(400).json({ error: 'Invalid ObjectId format', providedId: id });
           }
       
-          const admin = await Admin.findById(id);
+          const admin = await Admin.findById(id).populate('roles');
       
           // Check if the admin with the given ID exists
           if (!admin) {
@@ -64,35 +68,34 @@ class AdminController {
       };
       
 
-    static updateAdmin = async (req, res) => {
+      static updateAdmin = async (req, res) => {
         const { id } = req.params;
-        const {  username, password , authorized} 
-        = req.body;
-
+        const { username, password, authorized, roles } = req.body;
+    
         try {
             const updateFields = {
                 username,
-                password,
-                authorized
+                authorized,
+                roles
             };
-
-            // Check if an image file is uploaded
-            if (req.file) {
-                updateFields.image = `${req.protocol}://${req.get("host")}/${req.file.path}`;
-            };
-
+    
+            if (password) {
+                const hashedPassword = await bcrypt.hash(password, 10);
+                updateFields.password = hashedPassword;
+            }
+    
             const admin = await Admin.findByIdAndUpdate(
                 id,
                 updateFields,
                 { new: true }
             );
-
+    
             res.status(200).json(admin);
-        } 
-        catch (error) {
+        } catch (error) {
             res.status(400).json({ error: error.message });
         }
     };
+    
 
     static deleteAdmin = async (req, res) => {
         const { id } = req.params;

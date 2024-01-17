@@ -7,6 +7,9 @@ import AboutusRouter from './routes/aboutusRoute.js'
 import RoleRouter from './routes/roleRoute.js'
 import UsersRoutes from './routes/userRoute.js'
 import AdminsRoutes from './routes/adminRoute.js'
+import OrderRouter from './routes/orderRoute.js'
+import ProductRouter from './routes/productRoute.js'
+import CategoryRouter from './routes/categoryRoute.js'
 import { Server } from 'socket.io'
 import {createServer} from 'http'
 dotenv.config()
@@ -25,7 +28,9 @@ app.use("/api/users",UsersRoutes)
 app.use("/api/admins",AdminsRoutes)
 app.use('/api/aboutus',AboutusRouter)
 app.use('/api/roles',RoleRouter)
-app.use('/api/users',UsersRoutes)
+app.use('/api/orders',OrderRouter)
+app.use('/api/products',ProductRouter)
+app.use('/api/categories',CategoryRouter)
 
 
 
