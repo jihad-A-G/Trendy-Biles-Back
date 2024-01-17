@@ -12,18 +12,25 @@ const categorySchema = new mongoose.Schema({
   products: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
+      ref: "products",
+      required: false,
     },
   ],
 });
 
-categorySchema.statics.getAllCategories = async () => {
+// categorySchema.pre("find", function (next) {
+//   this.populate(["products"]);
+//   next();
+// });
+
+categorySchema.statics.getAllCategories =  async function() 
+{
   return this.find().populate("products");
 };
-categorySchema.statics.getOneCategory = async (categoryId) => {
-  return this.findById(categoryId).populate("products");
+categorySchema.statics.getOneCategory =  async function (categoryId) {
+  return this.findById(categoryId)?.populate("products");
 };
   
 const Category = mongoose.model("categories", categorySchema); // the products here is the name for table at data base
 
-module.exports = Category;
+export default Category;

@@ -44,17 +44,21 @@ const productSchema = new mongoose.Schema({
       type: String,
       required: true 
     },
+    // quantity: {
+    //   type: Number,
+    //   required: true 
+    // },
   }],
 
 });
 
-productSchema.statics.getAllProducts = async () => {
+productSchema.statics.getAllProducts = async function() {
   return this.find().populate("categories");
 };
-productSchema.statics.getProductById = async (productId) => {
+productSchema.statics.getProductById = async function(productId) {
   return this.findById(productId).populate("categories");
 };
 
 const Product = mongoose.model("products", productSchema);
 
-module.exports = Product;
+export default  Product;

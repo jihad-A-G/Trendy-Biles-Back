@@ -1,5 +1,6 @@
 import mongooose  from "mongoose";
 import  Category  from "../Models/CategoryModel.js";
+import Product from "../Models/ProductModel.js";
 
 class CategoryController {
     static createCategory = async (req, res) => {
@@ -23,6 +24,7 @@ class CategoryController {
             res.status(200).json(category);
         } 
         catch (error) {
+            console.log(error);
             res.status(400).json({ error: { ...error } });
         }
     };
@@ -69,14 +71,21 @@ class CategoryController {
     static deleteCategory = async (req, res) => {
         const { id } = req.params;
         try {
-            await Category.findByIdAndDelete(id);
-            res.status(200).json({ message: "category deleted succefully" });
-        } 
-        catch (error) {
-            res.status(400).json({ error: error.message });
+          const category = await Category.findById(id);
+    
+          // Remove category from products
+          await Product.updateMany(
+            { _id: { $in: category.products } },
+            { $pull: { categories: id } }
+          );
+    
+          await Category.findByIdAndDelete(id);
+          res.status(200).json({ message: "Category deleted successfully" });
+        } catch (error) {
+          res.status(400).json({ error: error.message });
         }
-    };
+      };
 }
 
-module.exports = CategoryController
+export default  CategoryController
 

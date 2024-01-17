@@ -9,4 +9,4 @@ categoryRouter.get("/:id",CategoryController.readOneCategory);
 categoryRouter.patch("/:id",CategoryController.updateCategory);
 categoryRouter.delete("/:id",CategoryController.deleteCategory);
 
-module.exports = categoryRouter;
+export default  categoryRouter;
