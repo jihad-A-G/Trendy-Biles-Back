@@ -1,10 +1,10 @@
 import mongooose  from "mongoose";
 import  Category  from "../Models/CategoryModel.js";
+import Product from "../Models/ProductModel.js";
 
 class CategoryController {
     static createCategory = async (req, res) => {
-        const { name, confirm } 
-        = req.body;
+        const { name, confirm }  = req.body;
 
         try {
             const category = await Category.create({
@@ -20,10 +20,11 @@ class CategoryController {
     
     static readCategory = async (req, res) => {
         try {
-            const category = await Category.find();
+            const category = await Category.getAllCategories();
             res.status(200).json(category);
         } 
         catch (error) {
+            console.log(error);
             res.status(400).json({ error: { ...error } });
         }
     };
@@ -31,7 +32,7 @@ class CategoryController {
     static readOneCategory = async (req, res) => {
         const { id } = req.params;
         try {
-            const category = await Category.findById(id)
+            const category = await Category.getOneCategory(id)
             res.status(200).json(category);
         } 
         catch (error) {
@@ -41,8 +42,7 @@ class CategoryController {
 
     static updateCategory = async (req, res) => {
         const { id } = req.params;
-        const { name, confirm } 
-        = req.body;
+        const { name, confirm } = req.body;
 
         try {
             const updateFields = {
@@ -71,13 +71,21 @@ class CategoryController {
     static deleteCategory = async (req, res) => {
         const { id } = req.params;
         try {
-            await Category.findByIdAndDelete(id);
-            res.status(200).json({ message: "category deleted succefully" });
-        } 
-        catch (error) {
-            res.status(400).json({ error: error.message });
+          const category = await Category.findById(id);
+    
+          // Remove category from products
+          await Product.updateMany(
+            { _id: { $in: category.products } },
+            { $pull: { categories: id } }
+          );
+    
+          await Category.findByIdAndDelete(id);
+          res.status(200).json({ message: "Category deleted successfully" });
+        } catch (error) {
+          res.status(400).json({ error: error.message });
         }
-    };
+      };
 }
-module.exports = CategoryController
+
+export default  CategoryController
 
