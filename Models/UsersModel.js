@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
   username: { 
@@ -10,11 +11,11 @@ const userSchema = new mongoose.Schema({
     required: true
   },
   email: { 
-    type: String ,
+    type: String,
     required: true
   },
-  phoneNumber : {
-    type : Number,
+  phoneNumber: {
+    type: Number,
     required: true
   },
   address: {
@@ -23,6 +24,14 @@ const userSchema = new mongoose.Schema({
   }
 });
 
+// Static method for comparing passwords
+userSchema.statics.comparePassword = async function(candidatePassword, hashedPassword) {
+  try {
+    return await bcrypt.compare(candidatePassword, hashedPassword);
+  } catch (error) {
+    throw error;
+  }
+};
 
 const User = mongoose.model("users", userSchema);
 

@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import bodyParser from 'body-parser'
 import connect from './config/db.js'
 import cors from 'cors'
+import cookieParser from 'cookie-parser';
 import AboutusRouter from './routes/aboutusRoute.js'
 import RoleRouter from './routes/roleRoute.js'
 import UsersRoutes from './routes/userRoute.js'
@@ -20,6 +21,8 @@ app.use(express.json())
 app.use('/images',express.static('images'))
 //Allow access from any origin
 app.use(cors())
+
+app.use(cookieParser())
 
 //Routes goes here
 app.use("/api/users",UsersRoutes)
