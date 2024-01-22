@@ -10,7 +10,9 @@ import UsersRoutes from './routes/userRoute.js'
 import AdminsRoutes from './routes/adminRoute.js'
 import OrderRouter from './routes/orderRoute.js'
 import ProductRouter from './routes/productRoute.js'
+import ProductDetailsRouter from './routes/productDetailsRoute.js'
 import CategoryRouter from './routes/categoryRoute.js'
+import BrandRouter from './routes/brandRoute.js'
 dotenv.config()
 const app = express()
 //middlware to parse request body that doesn't contains files(multer will do parse the one contains files)
@@ -31,7 +33,10 @@ app.use('/api/aboutus',AboutusRouter)
 app.use('/api/roles',RoleRouter)
 app.use('/api/orders',OrderRouter)
 app.use('/api/products',ProductRouter)
+app.use('/api/productDetails',ProductDetailsRouter)
 app.use('/api/categories',CategoryRouter)
+app.use('/api/brands',BrandRouter)
+
 
 
 
