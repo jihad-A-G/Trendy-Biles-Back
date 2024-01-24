@@ -49,7 +49,7 @@ io.on("connection",(socket) =>{
 
 })
 
-app.listen(process.env.PORT,(err) => {
+httpServer.listen(process.env.PORT,(err) => {
     if(err){
         console.log('Something went wrong',err);
     }
