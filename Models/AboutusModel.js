@@ -7,7 +7,7 @@ const aboutusSchema = new mongoose.Schema({
   },
   logoImage:{
     type:String,
-    required:false
+    required:true
   },
   companyName:{
     type:String,

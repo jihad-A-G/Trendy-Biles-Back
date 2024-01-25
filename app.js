@@ -28,6 +28,11 @@ app.use(cors())
 
 app.use(cookieParser())
 
+app.use((req,res,next) => {
+    console.log(`//${req.method} ${req.path} `);
+    next()
+})
+
 //Routes goes here
 app.use("/api/users",UsersRoutes)
 app.use("/api/admins",AdminsRoutes)
