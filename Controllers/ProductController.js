@@ -61,7 +61,7 @@ class ProductController {
         if (!categoryObj) {
           return res.status(404).json({ error: 'Category not found' });
         }
-        products = await Product.find({ categories: categoryObj._id });
+        products = await Product.getAllProducts({ categories: categoryObj._id });
       } else {
         // If no category is provided, get all products
         products = await Product.getAllProducts();
