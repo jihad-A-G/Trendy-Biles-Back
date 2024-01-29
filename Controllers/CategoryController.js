@@ -5,11 +5,17 @@ import Product from "../Models/ProductModel.js";
 class CategoryController {
     static createCategory = async (req, res) => {
         const { name, confirm }  = req.body;
+        const categoryImage = req.file
+        console.log(categoryImage.path);
+        if(!categoryImage){
+            return res.status(400).json({status:400,message:'Image is required'})
+        }
 
         try {
             const category = await Category.create({
                 name,
-                confirm
+                confirm,
+                categoryImage:categoryImage?.path
             });
             res.status(200).json(category);
         } 
@@ -42,24 +48,17 @@ class CategoryController {
 
     static updateCategory = async (req, res) => {
         const { id } = req.params;
-        const { name, confirm } = req.body;
+        const { name } = req.body;
+        const categoryImage = req.file
+        console.log(categoryImage?.path);
 
         try {
-            const updateFields = {
-                name,
-                confirm
-            };
-
-            // Check if an image file is uploaded
-            if (req.file) {
-                updateFields.image = `${req.protocol}://${req.get("host")}/${req.file.path}`;
-            };
+          
 
             const category = await Category.findByIdAndUpdate(
-                id,
-                updateFields,
-                { new: true }
-            );
+                id,{name:name,
+                    categoryImage:categoryImage?.path}
+                );
 
             res.status(200).json(category);
         } 

@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 import Admin from "../Models/AdminsModel.js";
 import jwt from 'jsonwebtoken';
 import bcrypt from "bcrypt";
-
+import dotenv from 'dotenv'
+dotenv.config()
 class AdminController {
   static createAdmin = async (req, res) => {
     const { username, password, authorized, roles } = req.body;
