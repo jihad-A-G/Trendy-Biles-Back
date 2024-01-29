@@ -24,7 +24,7 @@ class ProductDetailsController {
         color,
       } = req.body;
 
-      const images = req.files.map(file => file.filename);
+      const images = req.files ? req.files.map(file => file.filename) : [];
 
       try {
         const productDetail = await ProductDetails.create({
@@ -89,7 +89,7 @@ class ProductDetailsController {
         color,
       } = req.body;
 
-      const images = req.files.map(file => file.filename);
+      const images = req.files ? req.files.map(file => file.filename) : [];
 
       try {
         const updateFields = {

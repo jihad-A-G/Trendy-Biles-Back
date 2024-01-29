@@ -52,13 +52,26 @@ class ProductController {
 
   // Get all products
   static readProduct = async (req, res) => {
+    const { category } = req.query;
     try {
-      const products = await Product.getAllProducts();
+      let products;
+      if (category) {
+        // If a category is provided, find all products that belong to this category
+        const categoryObj = await Category.findOne({ name: category });
+        if (!categoryObj) {
+          return res.status(404).json({ error: 'Category not found' });
+        }
+        products = await Product.find({ categories: categoryObj._id });
+      } else {
+        // If no category is provided, get all products
+        products = await Product.getAllProducts();
+      }
       res.status(200).json(products);
     } catch (error) {
       res.status(400).json({ error: { ...error } });
     }
   };
+  
 
   // Get a single product by ID
   static readOneProduct = async (req, res) => {

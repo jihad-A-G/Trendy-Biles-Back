@@ -20,7 +20,7 @@ class CategoryController {
     
     static readCategory = async (req, res) => {
         try {
-            const category = await Category.find();
+            const category = await Category.getAllCategories();
             res.status(200).json(category);
         } 
         catch (error) {
@@ -32,7 +32,7 @@ class CategoryController {
     static readOneCategory = async (req, res) => {
         const { id } = req.params;
         try {
-            const category = await Category.findById(id)
+            const category = await Category.getOneCategory(id)
             res.status(200).json(category);
         } 
         catch (error) {
