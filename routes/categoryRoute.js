@@ -6,7 +6,7 @@ const categoryRouter = express.Router();
 categoryRouter.post("/",upload.single('categoryImage'),CategoryController.createCategory);
 categoryRouter.get("/",CategoryController.readCategory);
 categoryRouter.get("/:id",CategoryController.readOneCategory);
-categoryRouter.put("/:id",upload.single('categoryImage'),CategoryController.updateCategory);
+categoryRouter.patch("/:id",upload.single('categoryImage'),CategoryController.updateCategory);
 categoryRouter.delete("/:id",CategoryController.deleteCategory);
 
 export default  categoryRouter;
