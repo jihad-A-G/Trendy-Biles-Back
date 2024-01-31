@@ -4,16 +4,17 @@ import Admin from '../Models/AdminsModel.js'
 dotenv.config();
 
 
-const verifyToken = (token) => {
+const verifyToken = async(token) => {
     return jwt.verify(token, process.env.SECRET_STRING);
 };
 export const authenticate = async (req, res, next) => {
+  console.log();
   try {
       const token = req.cookies.token;
       if (!token) {
           return res.status(401).json({ message: "Invalid token" });
       }
-      const decoded = verifyToken(token);
+      const decoded =await  verifyToken(token);
       
       // Populate the 'roles' field to get the role details
       const admin = await Admin.findById(decoded.id).populate('roles');

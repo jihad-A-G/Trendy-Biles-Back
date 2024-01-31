@@ -7,7 +7,12 @@ const categorySchema = new mongoose.Schema({
   },
   confirm: { 
     type: Boolean,
-    required: true,
+    required: false,
+    default:false
+  },
+  categoryImage:{
+    type:String,
+    required:true
   },
   products: [
     {
