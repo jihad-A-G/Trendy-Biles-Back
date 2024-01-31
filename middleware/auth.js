@@ -22,8 +22,14 @@ export const authenticate = async (req, res, next) => {
           return res.status(401).json({ message: "Invalid token" });
       }
 
-      req.admin = admin;
+
+        req.admin = admin;
+        req.id = decoded.id;
+        req.roles = admin.roles.name;
+
       console.log("here decoded", admin);
+      console.log("req id here",req.id)
+      console.log("roles here",req.roles)
       next();
   } catch (err) {
       res.status(500).json({ message: err.message });
