@@ -1,18 +1,19 @@
 import mongoose from "mongoose";
 
 const notificationSchema = new mongoose.Schema({
-  content: { 
+  title: { 
     type: String,
     required: true,
   },
-  sender_id: { 
-    type: mongoose.SchemaTypes.ObjectId,
-    required: true,
+  message:{
+    type:String,
+    required:true
   },
-  reciever_id: { 
-    type: mongoose.SchemaTypes.ObjectId,
-    required: true,
+  readStatus:{
+    type:Boolean,
+    default:false,
   },
+
 });
 
 
