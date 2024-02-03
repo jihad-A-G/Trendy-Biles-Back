@@ -38,13 +38,22 @@ const productSchema = new mongoose.Schema({
 
 });
 
-productSchema.statics.getAllProducts = async function () {
-    return this.find().populate("categories").populate("brand").populate("details");
+productSchema.statics.getAllProducts = async function (status) {
+  let query = this.find().populate("categories").populate("brand").populate("details");
+  if (status) {
+      query = query.where('status').equals(status);
+  }
+  return query;
 };
 
-productSchema.statics.getProductById = async function (productId) {
-    return this.findById(productId).populate("categories").populate("brand").populate("details");
+productSchema.statics.getProductById = async function (productId, status) {
+  let query = this.findById(productId).populate("categories").populate("brand").populate("details");
+  if (status) {
+      query = query.where('status').equals(status);
+  }
+  return query;
 };
+
 
 const Product = mongoose.model("products", productSchema);
 
