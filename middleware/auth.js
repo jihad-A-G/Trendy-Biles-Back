@@ -24,13 +24,8 @@ export const authenticate = async (req, res, next) => {
       }
 
 
-        req.admin = admin;
-        req.id = decoded.id;
-        req.roles = admin.roles.name;
-
-      console.log("here decoded", admin);
-      console.log("req id here",req.id)
-      console.log("roles here",req.roles)
+      req.admin = admin;
+      // console.log("here decoded", admin);
       next();
   } catch (err) {
       res.status(500).json({ message: err.message });

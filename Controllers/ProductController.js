@@ -7,14 +7,19 @@ import Brand from "../Models/BrandModel.js";
 class ProductController {
   // Create a new product
   static createProduct = async (req, res) => {
-    const { productName, details, categories, brand, description, status } = req.body;
+    const { productName, details, categories, brand, description, status } =
+      req.body;
 
     try {
       // Find existing details
-      const existingDetails = await ProductDetails.find({ _id: { $in: details } });
+      const existingDetails = await ProductDetails.find({
+        _id: { $in: details },
+      });
 
       // Find existing categories or create new ones
-      const existingCategories = await Category.find({ _id: { $in: categories } });
+      const existingCategories = await Category.find({
+        _id: { $in: categories },
+      });
       const existingBrand = await Brand.findById(brand); // Find existing brand
 
       const product = await Product.create({
@@ -49,30 +54,40 @@ class ProductController {
       res.status(400).json({ error: error.message });
     }
   };
-
-  // Get all products
   static readProduct = async (req, res) => {
     const { category } = req.query;
     try {
-      let products;
-      if (category) {
-        // If a category is provided, find all products that belong to this category
-        const categoryObj = await Category.findOne({ name: category });
-        if (!categoryObj) {
-          return res.status(404).json({ error: 'Category not found' });
+        let products;
+        if (category) {
+          // If a category is provided, find all products that belong to this category
+          const categoryObj = await Category.findOne({ name: category }).populate({
+            path: 'products',
+            populate: [
+              {
+                path: 'details',
+                model: 'productDetails'
+              },
+              {
+                path: 'brand',
+                model: 'brands'
+              }
+            ]
+          });
+          if (!categoryObj) {
+            return res.status(404).json({ error: "Category not found" });
+          }
+          console.log('hi',categoryObj);
+          products = categoryObj.products;
+        } else {
+          // If no category is provided, fetch all products
+          products = await Product.find().populate('categories').populate('brand').populate('details');
         }
-        products = await Product.getAllProducts({ categories: categoryObj._id });
-      } else {
-        // If no category is provided, get all products
-        products = await Product.getAllProducts();
-      }
-      res.status(200).json(products);
+        res.status(200).json(products);
     } catch (error) {
-      res.status(400).json({ error: { ...error } });
+        res.status(400).json({ error: { ...error } });
     }
-  };
-  
-
+   };
+   
   // Get a single product by ID
   static readOneProduct = async (req, res) => {
     const { id } = req.params;
@@ -87,14 +102,19 @@ class ProductController {
   // Update a product
   static updateProduct = async (req, res) => {
     const { id } = req.params;
-    const { productName, details, categories, brand, description, status } = req.body;
+    const { productName, details, categories, brand, description, status } =
+      req.body;
 
     try {
       // Find existing details
-      const existingDetails = await ProductDetails.find({ _id: { $in: details } });
+      const existingDetails = await ProductDetails.find({
+        _id: { $in: details },
+      });
 
       // Find existing categories or create new ones
-      const existingCategories = await Category.find({ _id: { $in: categories } });
+      const existingCategories = await Category.find({
+        _id: { $in: categories },
+      });
       const existingBrand = await Brand.findById(brand); // Find existing brand
 
       const updateFields = {
@@ -106,10 +126,12 @@ class ProductController {
         status,
       };
 
-      const product = await Product.findByIdAndUpdate(id, updateFields, { new: true });
+      const product = await Product.findByIdAndUpdate(id, updateFields, {
+        new: true,
+      });
 
       if (!product) {
-        return res.status(404).json({ error: 'Product not found' });
+        return res.status(404).json({ error: "Product not found" });
       }
 
       // Add product to the products array in each category
