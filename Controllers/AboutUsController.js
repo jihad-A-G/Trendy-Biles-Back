@@ -1,5 +1,18 @@
 import AboutUs from "../Models/AboutusModel.js";
 
+export const getAboutus = async(req,res,next) =>{
+    try{
+        const aboutus = await AboutUs.findOne()
+        if(!aboutus){
+            return res.status(404).json({status:404,message:'No content found!'})
+        }
+        res.status(200).json({status:200,aboutus})
+    }catch(err){
+        console.log(err);
+        res.status(500).json({message:'Cannot load Aboutus',status:500})
+    }
+}
+
 export const getAboutUsContent = async(req,res,next) =>{
     try{
         const aboutusContent = await AboutUs.findOne({}).select('content')
@@ -18,7 +31,7 @@ export const getAboutUsInfo = async(req,res,next) =>{
     try{
          aboutus = await AboutUs.findOne()
         if(!aboutus){
-            aboutus = await AboutUs.create({content:'', companyName:'Trendy Biles', logoImage:null})      
+            aboutus = await AboutUs.create({content:'', companyName:'Trendy Biles', logoImage:'images/Screenshot 2023-12-02 121409.png'})      
             return res.status(200).json({status:200, aboutus})      
         }
         res.status(200).json({status:200, aboutus})
@@ -28,21 +41,13 @@ export const getAboutUsInfo = async(req,res,next) =>{
     }
 }
 export const EditAboutus = async(req,res,next) =>{
-    const {content,companyName} = req.body
+    const {content,companyName,defaultImage} = req.body
     const logoImage = req.file
     try{
-    if(!content || !companyName || !logoImage.path){
+    if(!content || !companyName){
         return res.status(400).json({status:400, message:'All filed are required!'})
     }
-    var aboutus = await AboutUs.findOne()
-    if(!aboutus) {
-        aboutus = await AboutUs.create({content: content, logoImage: logoImage.path, companyName: companyName})
-        return res.status(200).json({status:200, message:'Aboutus Added successfully'})
-    }
-    aboutus.content = content
-    aboutus.logoImage = logoImage.path
-    aboutus.companyName = companyName
-    await aboutus.save()
+   const aboutus = await AboutUs.findOneAndUpdate({},{companyName:companyName, content:content, logoImage:logoImage?.path??defaultImage})
     res.status(200).json({status:200, message:'Aboutus Updated successfully!'})
 }catch(err){
     console.log(err);
