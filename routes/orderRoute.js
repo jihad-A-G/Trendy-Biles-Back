@@ -1,6 +1,5 @@
 import express from "express";
 import OrderController from "../Controllers/OrderController.js";
-import { authenticate,AdminRole} from "../middleware/auth.js";
 const orderRouter = express.Router();
 
 orderRouter.post("/",OrderController.createOrder);

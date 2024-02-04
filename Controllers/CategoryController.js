@@ -8,7 +8,7 @@ class CategoryController {
         const categoryImage = req.file
         console.log(categoryImage.path);
         if(!categoryImage){
-            return res.status(400).json({status:400,message:'Image is required'})
+            return res.status(400).json({status:400,message:'Image is r equired'})
         }
 
         try {

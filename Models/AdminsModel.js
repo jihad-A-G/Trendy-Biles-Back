@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
 
 const adminSchema = new mongoose.Schema({
   username: {
@@ -26,18 +25,6 @@ adminSchema.pre("find", function (next) {
   this.populate("roles");
   next();
 });
-
-// Static method for comparing passwords
-adminSchema.statics.comparePassword = async function (
-  candidatePassword,
-  hashedPassword
-) {
-  try {
-    return await bcrypt.compare(candidatePassword, hashedPassword);
-  } catch (error) {
-    throw error;
-  }
-};
 
 const Admin = mongoose.model("admins", adminSchema);
 
