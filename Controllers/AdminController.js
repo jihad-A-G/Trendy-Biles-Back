@@ -3,6 +3,7 @@ import Admin from "../Models/AdminsModel.js";
 import jwt from 'jsonwebtoken';
 import bcrypt from "bcrypt";
 import dotenv from 'dotenv'
+import io from "../config/socketIo.js";
 dotenv.config()
 class AdminController {
   static createAdmin = async (req, res) => {
@@ -112,7 +113,7 @@ class AdminController {
 
     try {
       // Find user by email
-      const admin = await Admin.findOne({ username });
+      const admin = await Admin.findOne({ username }).populate('roles');
 
       // Check if the user exists and the password is correct
       if (!admin || !(await bcrypt.compare(password, admin.password))) {
