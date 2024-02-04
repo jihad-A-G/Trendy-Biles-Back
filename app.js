@@ -19,11 +19,11 @@ import { authenticate } from './middleware/auth.js'
 dotenv.config()
 const app = express()
 //middlware to parse request body that doesn't contains files(multer will do parse the one contains files)
-app.use(bodyParser.urlencoded({extended:false}))
+app.use(bodyParser.urlencoded({ extended: false }));
 //middleware to parse json objects
-app.use(express.json())
+app.use(express.json());
 //define images folder as static folder
-app.use('/images',express.static('images'))
+app.use("/images", express.static("images"));
 //Allow access from any origin
 app.use(cors({
     origin: 'http://localhost:5173', // Replace with your frontend URL

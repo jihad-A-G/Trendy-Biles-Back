@@ -55,49 +55,50 @@ class ProductController {
     }
   };
   static readProduct = async (req, res) => {
-    const { category } = req.query;
+    const { category, status } = req.query;
     try {
         let products;
         if (category) {
-          // If a category is provided, find all products that belong to this category
-          const categoryObj = await Category.findOne({ name: category }).populate({
-            path: 'products',
-            populate: [
-              {
-                path: 'details',
-                model: 'productDetails'
-              },
-              {
-                path: 'brand',
-                model: 'brands'
-              }
-            ]
-          });
-          if (!categoryObj) {
-            return res.status(404).json({ error: "Category not found" });
-          }
-          console.log('hi',categoryObj);
-          products = categoryObj.products;
+            // Fetch products by category and status
+            const categoryObj = await Category.findOne({ name: category })
+                .populate({
+                    path: 'products',
+                    match: { status: status || { $exists: true } }, // Match status if provided
+                    populate: [
+                        {
+                            path: 'details',
+                            model: 'productDetails'
+                        },
+                        {
+                            path: 'brand',
+                            model: 'brands'
+                        }
+                    ]
+                });
+            if (!categoryObj) {
+                return res.status(404).json({ error: "Category not found" });
+            }
+            products = categoryObj.products;
         } else {
-          // If no category is provided, fetch all products
-          products = await Product.find().populate('categories').populate('brand').populate('details');
+            // Fetch all products by status
+            products = await Product.getAllProducts(status);
         }
         res.status(200).json(products);
     } catch (error) {
         res.status(400).json({ error: { ...error } });
     }
-   };
-   
-  // Get a single product by ID
-  static readOneProduct = async (req, res) => {
+};
+
+static readOneProduct = async (req, res) => {
     const { id } = req.params;
+    const { status } = req.query;
     try {
-      const product = await Product.getProductById(id);
-      res.status(200).json(product);
+        const product = await Product.getProductById(id, status);
+        res.status(200).json(product);
     } catch (error) {
-      res.status(400).json({ error: { ...error } });
+        res.status(400).json({ error: { ...error } });
     }
-  };
+};
 
   // Update a product
   static updateProduct = async (req, res) => {
