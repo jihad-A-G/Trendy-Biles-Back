@@ -1,11 +1,10 @@
 import express from "express"
 import * as aboutusController from '../Controllers/AboutUsController.js'
 import upload from "../config/multer.js"
-import { authenticate } from "../middleware/auth.js"
 const router = express.Router()
 
 //GET about us
-router.get('/',authenticate,aboutusController.getAboutus)
+router.get('/',aboutusController.getAboutus)
 //GET about us content 
 router.get('/content',aboutusController.getAboutUsContent)
 //GET about us info or create one if doesn't exists

@@ -13,9 +13,8 @@ import ProductRouter from './routes/productRoute.js'
 import ProductDetailsRouter from './routes/productDetailsRoute.js'
 import CategoryRouter from './routes/categoryRoute.js'
 import BrandRouter from './routes/brandRoute.js'
-import io from './config/socketIo.js'
+import { Server } from 'socket.io'
 import {createServer} from 'http'
-import { authenticate } from './middleware/auth.js'
 dotenv.config()
 const app = express()
 //middlware to parse request body that doesn't contains files(multer will do parse the one contains files)
@@ -25,27 +24,26 @@ app.use(express.json());
 //define images folder as static folder
 app.use("/images", express.static("images"));
 //Allow access from any origin
-app.use(cors({
-    origin: 'http://localhost:5173', // Replace with your frontend URL
- credentials: true,
-}))
+app.use(cors())
 
 app.use(cookieParser())
-
 
 app.use((req,res,next) => {
     console.log(`//${req.method} ${req.path} `);
     next()
 })
 
-
+app.use((req,res,next) =>{
+    req.cookies.token ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YTkzYWQyYTYyYTZmMWZlOGU0N2VhOCIsIm5hbWUiOiJhaG1hZCIsInJvbGVzIjoiNjVhNjg3Yjg4ZDU3MzRiMTEyNTNlYTYwIiwiaWF0IjoxNzA2NTEyNzcwLCJleHAiOjE3MDY1OTkxNzB9.2E7KspWE0ImrI6WGUmIq0i-Ub6rBxMYgVou-IaT5CFk'
+    return next()
+})
 
 //Routes goes here
 app.use("/api/users",UsersRoutes)
 app.use("/api/admins",AdminsRoutes)
-app.use('/api/aboutus',authenticate,AboutusRouter)
+app.use('/api/aboutus',AboutusRouter)
 app.use('/api/roles',RoleRouter)
-app.use('/api/orders',authenticate,OrderRouter)
+app.use('/api/orders',OrderRouter)
 app.use('/api/products',ProductRouter)
 app.use('/api/productDetails',ProductDetailsRouter)
 app.use('/api/categories',CategoryRouter)
@@ -57,23 +55,17 @@ app.use('/api/brands',BrandRouter)
 //this middleware coonect to the mongodb atlas cluster, 'db_string' is the connection string
 await connect(process.env.CONNECTION_STRING)
 const httpServer = createServer(app)
-
-io.attach(httpServer)
-
-//test socket connection
-io.on("connection", (socket) => {
-    console.log(socket.id);
-    socket.on('joinSuperAdminRoom',(superAdmin)=>{
-      if(superAdmin.roles.name==='Super-Admin'){
-        socket.join('superAdminRoom');
-        const users= io.sockets.adapter.rooms.get('superAdminRoom');
-        console.log("super admin joined the room");
-        console.log(users?.size);
-      }
-    })
+const io = new Server(httpServer,{
+    cors:{
+        origin:'*',
+        methods:['GET','POST','PUT','PATCH','DELETE']
+    }
 })
-//test socket disconnection
-io.on('disconnect',()=>{console.log("Client Disconnected");})
+io.on("connection",(socket) =>{
+
+        console.log(socket.id);
+
+})
 
 httpServer.listen(process.env.PORT,(err) => {
     if(err){

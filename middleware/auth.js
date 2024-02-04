@@ -24,7 +24,7 @@ export const authenticate = async (req, res, next) => {
       }
 
       req.admin = admin;
-      // console.log("here decoded", admin);
+      console.log("here decoded", admin);
       next();
   } catch (err) {
       res.status(500).json({ message: err.message });
