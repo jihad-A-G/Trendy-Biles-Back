@@ -13,6 +13,7 @@ import ProductRouter from './routes/productRoute.js'
 import ProductDetailsRouter from './routes/productDetailsRoute.js'
 import CategoryRouter from './routes/categoryRoute.js'
 import BrandRouter from './routes/brandRoute.js'
+import NotificationRouter from './routes/notificationRoute.js'
 import io from './config/socketIo.js'
 import {createServer} from 'http'
 import { authenticate } from './middleware/auth.js'
@@ -50,6 +51,7 @@ app.use('/api/products',ProductRouter)
 app.use('/api/productDetails',ProductDetailsRouter)
 app.use('/api/categories',CategoryRouter)
 app.use('/api/brands',BrandRouter)
+app.use('/api/notifications',NotificationRouter)
 
 
 
@@ -63,17 +65,12 @@ io.attach(httpServer)
 //test socket connection
 io.on("connection", (socket) => {
     console.log(socket.id);
-    socket.on('joinSuperAdminRoom',(superAdmin)=>{
-      if(superAdmin.roles.name==='Super-Admin'){
-        socket.join('superAdminRoom');
-        const users= io.sockets.adapter.rooms.get('superAdminRoom');
-        console.log("super admin joined the room");
-        console.log(users?.size);
-      }
+    io.on('hello',w=>{
+        console.log(w);
     })
+    io.on('disconnect',()=>{console.log("Client Disconnected");})
 })
 //test socket disconnection
-io.on('disconnect',()=>{console.log("Client Disconnected");})
 
 httpServer.listen(process.env.PORT,(err) => {
     if(err){

@@ -13,6 +13,14 @@ const notificationSchema = new mongoose.Schema({
     type:Boolean,
     default:false,
   },
+  table:{
+    type:String,
+    required:true
+  },
+  time:{
+    type:Date,
+    required:true
+  }
 
 });
 

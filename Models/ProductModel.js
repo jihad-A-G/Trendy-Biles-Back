@@ -63,24 +63,23 @@ const productSchema = new mongoose.Schema({
 //Event listener for any change
 
 productChangeStream.on('change', async (change) => {
-console.log(change);
   const operationType = change.operationType;
   const collectionName = change.ns.coll;
   // const document = change.fullDocument ? JSON.stringify(change.fullDocument) : null;
  
   // Create a new notification instance
-  const notification = new Notification({
+  const notification = await Notification.create({
      title: `${operationType} operation in ${collectionName}`,
-     message: 'See the changes', // Store the document as a string
-     readStatus: false, // Default to unread
-     // You can also set the receiver field here if applicable
+     message: 'See the changes',
+     readStatus: false,
+     table:collectionName,
+     time:change.wallTime
+
   });
+  console.log(notification);
  
-
-  io.to('superAdminRoom').emit('notification', notification);
+  io.emit('notification', notification);
  
-
-  await notification.save();
  });
 
 export default Product;
