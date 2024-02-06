@@ -11,7 +11,7 @@ export const getAllNotificatiosn = async(req,res,next) =>{
 }
 
 export const readNotification = async(req,res,next) =>{
-    const {id} = req.params
+    const {id} = req.body
 
     const notification = await Notification.findById(id)
     notification.readStatus = true

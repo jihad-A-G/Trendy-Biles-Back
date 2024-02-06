@@ -5,6 +5,6 @@ const router = express.Router()
 
 router.get('/',NotificationController.getAllNotificatiosn)
 
-router.get('/:id', NotificationController.readNotification)
+router.post('/', NotificationController.readNotification)
 
 export default router
